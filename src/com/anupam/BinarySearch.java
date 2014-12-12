@@ -1,4 +1,4 @@
-package src.com.anupam;
+package com.anupam;
 
 /**
  * Binary search operations on a sorted array.
