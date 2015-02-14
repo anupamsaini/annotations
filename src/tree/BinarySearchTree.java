@@ -1,12 +1,12 @@
 package tree;
 
-import common.Helper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import common.Helper;
 
 
 /**
@@ -17,7 +17,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
   public static void main(String args[]) {
     // {9, 4, 1, 8, 2, 6, 10, 3};
     Integer arr[] = {20, 31, 17, 28, 23, 34, 30, 36, 46, 28};
-    // arr = Helper.generateRandomIntObj(50, 10);
+     arr = Helper.generateRandomIntObj(500000, 1000);
     BasicNode<Integer> node = generateBs(Arrays.asList(arr));
     System.out.println("Generated " + Helper.prettyPrintCollection(Arrays.asList(arr)));
     System.out.println("Breadth   " + breadth(node));
@@ -33,7 +33,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
     BasicNode<T> node = new BasicNode<T>(list.get(0));
     for (int i = 1; i < list.size(); i++) {
-      addToBs(node, list.get(i));
+      generateBST(node, list.get(i));
     }
     return node;
   }
@@ -89,12 +89,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
     }
-    List<BasicNode<T>> inOrderView = new ArrayList<BasicNode<T>>();
-    getAllLeafNodes(root, inOrderView);
-    return inOrderView;
+    List<BasicNode<T>> leafNodes = new ArrayList<BasicNode<T>>();
+    getAllLeafNodes(root, leafNodes);
+    return leafNodes;
   }
 
-  private static <T extends Comparable<T>> void addToBs(BasicNode<T> root, T value) {
+  private static <T extends Comparable<T>> void generateBST(BasicNode<T> root, T value) {
     BasicNode<T> node = root;
     while (true) {
       if (node.getValue().compareTo(value) == 1) {
@@ -150,7 +150,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
   }
 
   private static <T extends Comparable<T>> void getAllLeafNodes(BasicNode<T> node,
-      List<BasicNode<T>> postOrderView) {
-    traverseInOrder(node, postOrderView);
+      List<BasicNode<T>> leafNodes) {
+    List<BasicNode<T>> inOrderView = new ArrayList<>();
+    traverseInOrder(node, inOrderView);
+    for (BasicNode<T> possibleLeaf : inOrderView) {
+      if (!possibleLeaf.hasLeft() && !possibleLeaf.hasRight()) {
+        leafNodes.add(possibleLeaf);
+      }
+    }
   }
 }
