@@ -16,7 +16,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
   public static void main(String args[]) {
     // {9, 4, 1, 8, 2, 6, 10, 3};
-    Integer arr[] = {20, 31, 17, 28, 23, 34, 30, 36, 46, 28};
+    //Integer arr[] = {20, 31, 17, 28, 23, 34, 30, 36, 46, 28};
+    Integer arr[] = {50,25,75,10,30,60,90,4,12,27,40,55,65,80,99};
     // arr = Helper.generateRandomIntObj(50, 10);
     BasicNode<Integer> node = generateBs(Arrays.asList(arr));
     System.out.println("Generated " + Helper.prettyPrintCollection(Arrays.asList(arr)));
@@ -25,6 +26,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     System.out.println("PreDepth  " + inPreDepth(node));
     System.out.println("PostDepth " + inPostDepth(node));
     System.out.println("LeafNodes " + getAllLeafNodes(node));
+    System.out.println("height ok " + isHeigthBalanced(node));
   }
 
   public static <T extends Comparable<T>> BasicNode<T> generateBs(List<T> list) {
@@ -89,9 +91,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
     }
-    List<BasicNode<T>> inOrderView = new ArrayList<BasicNode<T>>();
-    getAllLeafNodes(root, inOrderView);
-    return inOrderView;
+    List<BasicNode<T>> leafNodes = new ArrayList<BasicNode<T>>();
+    getAllLeafNodes(root, leafNodes);
+    return leafNodes;
+  }
+
+  public static <T extends Comparable<T>> boolean isHeigthBalanced(BasicNode<T> root) {
+    return Math.abs(getHeight(root.getLeft()) - getHeight(root.getRight())) > 1 
+        ? false /* not balanced */: true /* balanced */;
   }
 
   private static <T extends Comparable<T>> void addToBs(BasicNode<T> root, T value) {
@@ -150,7 +157,20 @@ public class BinarySearchTree<T extends Comparable<T>> {
   }
 
   private static <T extends Comparable<T>> void getAllLeafNodes(BasicNode<T> node,
-      List<BasicNode<T>> postOrderView) {
-    traverseInOrder(node, postOrderView);
+      List<BasicNode<T>> leafNodes) {
+    List<BasicNode<T>> inOrderView = new ArrayList<>();
+    traverseInOrder(node, inOrderView);
+    for (BasicNode<T> basicNode : inOrderView) {
+      if (!basicNode.hasLeft() && !basicNode.hasRight()) {
+        leafNodes.add(basicNode);
+      }
+    }
+  }
+
+  private static <T extends Comparable<T>> int getHeight(BasicNode<T> node) {
+    if (node == null) {
+      return 0;
+    }
+    return Math.max(getHeight(node.getLeft()), getHeight(node.getRight())) + 1;
   }
 }
