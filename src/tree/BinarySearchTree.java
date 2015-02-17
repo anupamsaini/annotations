@@ -94,7 +94,20 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
       throw new IllegalArgumentException("Input is empty or null");
     }
     List<BasicNode<T>> leafNodes = new ArrayList<BasicNode<T>>();
-    getAllLeafNodes(root, leafNodes);
+    Queue<BasicNode<T>> inOrderView = new LinkedList<>();
+    inOrderView.add(root);
+    while (!inOrderView.isEmpty()) {
+      BasicNode<T> node = inOrderView.poll();
+      if (node.hasLeft()) {
+        inOrderView.add(node.getLeft());
+      }
+      if (node.hasRight()) {
+        inOrderView.add(node.getRight());
+      }
+      if (!node.hasLeft() && !node.hasRight()) {
+        leafNodes.add(node);
+      }
+    }
     return leafNodes;
   }
 
@@ -190,43 +203,6 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     traversePostDepth(node.getLeft(), postOrderView);
     traversePostDepth(node.getRight(), postOrderView);
     postOrderView.add(node);
-  }
-
-  private static <T extends Comparable<T>> void getAllLeafNodes(
-      BasicNode<T> node, List<BasicNode<T>> leafNodes) {
-    List<BasicNode<T>> inOrderView = new ArrayList<>();
-    traverseInOrder(node, inOrderView);
-    for (BasicNode<T> possibleLeaf : inOrderView) {
-      if (!possibleLeaf.hasLeft() && !possibleLeaf.hasRight()) {
-        leafNodes.add(possibleLeaf);
-      }
-    }
-  }
-
-  public static <T extends Comparable<T>> BasicNode<T> getRightMostNode(BasicNode<T> root) {
-    if (root == null) {
-      throw new IllegalArgumentException("Root node can not be null.");
-    }
-    BasicNode<T> rightNode = root;
-    while(true) {
-      if (!rightNode.hasRight()) {
-        return rightNode ;
-      }
-      rightNode = rightNode.getRight();
-    }
-  }
-
-  public static <T extends Comparable<T>> BasicNode<T> getLeftMostNode(BasicNode<T> root) {
-    if (root == null) {
-      throw new IllegalArgumentException("Root node can not be null.");
-    }
-    BasicNode<T> leftNode = root;
-    while(true) {
-      if (!leftNode.hasLeft()) {
-        return leftNode ;
-      }
-      leftNode = leftNode.getLeft();
-    }
   }
 
   private static <T extends Comparable<T>> int getHeight(BasicNode<T> node) {
