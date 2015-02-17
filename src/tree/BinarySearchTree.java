@@ -12,24 +12,26 @@ import common.Helper;
 /**
  * A trivial implementation of Binary Search Tree.
  */
-public class BinarySearchTree<T extends Comparable<T>> {
+public class BinarySearchTree<T extends Comparable<? super T>> {
 
   public static void main(String args[]) {
     // {9, 4, 1, 8, 2, 6, 10, 3};
-    //Integer arr[] = {20, 31, 17, 28, 23, 34, 30, 36, 46, 28};
-    Integer arr[] = {50,25,75,10,30,60,90,4,12,27,40,55,65,80,99};
+    Integer arr[] = {20, 31, 17, 23, 34, 30, 36, 46, 28};
+    //Integer arr[] = {50,25,75,10,30,60,90,4,12,27,40,55,65,80,99};
     // arr = Helper.generateRandomIntObj(50, 10);
-    BasicNode<Integer> node = generateBs(Arrays.asList(arr));
-    System.out.println("Generated " + Helper.prettyPrintCollection(Arrays.asList(arr)));
-    System.out.println("Breadth   " + breadth(node));
-    System.out.println("Inorder   " + inOrder(node));
-    System.out.println("PreDepth  " + inPreDepth(node));
-    System.out.println("PostDepth " + inPostDepth(node));
-    System.out.println("LeafNodes " + getAllLeafNodes(node));
-    System.out.println("height ok " + isHeigthBalanced(node));
+    BasicNode<Integer> node = generateBST(Arrays.asList(arr));
+    System.out.println("Generated       " + Helper.prettyPrintCollection(Arrays.asList(arr)));
+    System.out.println("Breadth         " + breadth(node));
+    System.out.println("Inorder         " + inOrder(node));
+    System.out.println("PreDepth        " + inPreDepth(node));
+    System.out.println("PostDepth       " + inPostDepth(node));
+    System.out.println("LeafNodes       " + getAllLeafNodes(node));
+    System.out.println("height ok       " + isHeigthBalanced(node));
+    System.out.println("Generated       "
+        + Helper.prettyPrintCollection(breadth(generateBinaryTree(Arrays.asList(arr)))));
   }
 
-  public static <T extends Comparable<T>> BasicNode<T> generateBs(List<T> list) {
+  public static <T extends Comparable<T>> BasicNode<T> generateBST(List<T> list) {
     if (null == list || list.size() < 1) {
       throw new IllegalArgumentException("Input is empty or null");
     }
@@ -101,6 +103,40 @@ public class BinarySearchTree<T extends Comparable<T>> {
         ? false /* not balanced */: true /* balanced */;
   }
 
+  public static <T extends Comparable<T>> BasicNode<T> generateBinaryTree(List<T> list) {
+    if (null == list || list.size() < 1) {
+      throw new IllegalArgumentException("Input is empty or null");
+    }
+    BasicNode<T> node = new BasicNode<T>(list.get(0));
+    for (int i = 1; i < list.size(); i++) {
+      generateBinaryTree(node, list.get(i));
+    }
+    return node;
+  }
+
+  private static <T extends Comparable<T>> void generateBinaryTree(BasicNode<T> root, T value) {
+    BasicNode<T> newNode = new BasicNode<T>(value);
+    Queue<BasicNode<T>> nodes = new LinkedList<BasicNode<T>>();
+    nodes.add(root);
+
+    while (!nodes.isEmpty()) {
+      BasicNode<T> node = nodes.poll();
+      if (node.hasLeft()) {
+        nodes.add(node.getLeft());
+      } else {
+        node.setLeft(newNode);
+        break;
+      }
+
+      if (node.hasRight()) {
+        nodes.add(node.getRight());
+      } else {
+        node.setRight(newNode);
+        break;
+      }
+    }
+  }
+
   private static <T extends Comparable<T>> void generateBST(BasicNode<T> root, T value) {
     BasicNode<T> node = root;
     while (true) {
@@ -164,6 +200,32 @@ public class BinarySearchTree<T extends Comparable<T>> {
       if (!possibleLeaf.hasLeft() && !possibleLeaf.hasRight()) {
         leafNodes.add(possibleLeaf);
       }
+    }
+  }
+
+  public static <T extends Comparable<T>> BasicNode<T> getRightMostNode(BasicNode<T> root) {
+    if (root == null) {
+      throw new IllegalArgumentException("Root node can not be null.");
+    }
+    BasicNode<T> rightNode = root;
+    while(true) {
+      if (!rightNode.hasRight()) {
+        return rightNode ;
+      }
+      rightNode = rightNode.getRight();
+    }
+  }
+
+  public static <T extends Comparable<T>> BasicNode<T> getLeftMostNode(BasicNode<T> root) {
+    if (root == null) {
+      throw new IllegalArgumentException("Root node can not be null.");
+    }
+    BasicNode<T> leftNode = root;
+    while(true) {
+      if (!leftNode.hasLeft()) {
+        return leftNode ;
+      }
+      leftNode = leftNode.getLeft();
     }
   }
 

@@ -1,9 +1,12 @@
 package tree;
 
+import java.util.Objects;
+
+
 /**
  * A Node in a binary tree.
  */
-public class BasicNode<T extends Comparable<T>> implements Comparable<T> {
+public class BasicNode<T extends Comparable<? super T>> {
 
   /**
    * The left child of the node.
@@ -58,7 +61,20 @@ public class BasicNode<T extends Comparable<T>> implements Comparable<T> {
   }
 
   @Override
-  public int compareTo(T o) {
-    return this.value.compareTo(o);
+  public int hashCode() {
+    return Objects.hash(left, right, value);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BasicNode<T> otherNode = (BasicNode<T>) o;
+    return this.getValue().compareTo(otherNode.getValue()) == 0 ? true : false;
   }
 }
