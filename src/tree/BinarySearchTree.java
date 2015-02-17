@@ -1,12 +1,12 @@
 package tree;
 
-import common.Helper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import common.Helper;
 
 
 /**
@@ -35,7 +35,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     }
     BasicNode<T> node = new BasicNode<T>(list.get(0));
     for (int i = 1; i < list.size(); i++) {
-      addToBs(node, list.get(i));
+      generateBST(node, list.get(i));
     }
     return node;
   }
@@ -101,7 +101,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         ? false /* not balanced */: true /* balanced */;
   }
 
-  private static <T extends Comparable<T>> void addToBs(BasicNode<T> root, T value) {
+  private static <T extends Comparable<T>> void generateBST(BasicNode<T> root, T value) {
     BasicNode<T> node = root;
     while (true) {
       if (node.getValue().compareTo(value) == 1) {
@@ -156,13 +156,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
     postOrderView.add(node);
   }
 
-  private static <T extends Comparable<T>> void getAllLeafNodes(BasicNode<T> node,
-      List<BasicNode<T>> leafNodes) {
+  private static <T extends Comparable<T>> void getAllLeafNodes(
+      BasicNode<T> node, List<BasicNode<T>> leafNodes) {
     List<BasicNode<T>> inOrderView = new ArrayList<>();
     traverseInOrder(node, inOrderView);
-    for (BasicNode<T> basicNode : inOrderView) {
-      if (!basicNode.hasLeft() && !basicNode.hasRight()) {
-        leafNodes.add(basicNode);
+    for (BasicNode<T> possibleLeaf : inOrderView) {
+      if (!possibleLeaf.hasLeft() && !possibleLeaf.hasRight()) {
+        leafNodes.add(possibleLeaf);
       }
     }
   }
