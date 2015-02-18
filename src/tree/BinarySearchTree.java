@@ -1,6 +1,7 @@
 package tree;
 
 import static tree.TreeUtil.getNodeHeight;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -175,6 +176,69 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
       generateBinaryTree(node, list.get(i));
     }
     return node;
+  }
+
+  /**
+   * Inserts a new node to the tree.
+   * 
+   * @param root the tree's root node
+   * @param valueToInsert the value to be inserted as a tree node
+   */
+  public static <T extends Comparable<T>> void insertToBST(BasicNode<T> root, T valueToInsert) {
+    if (null == root || null == valueToInsert) {
+      throw new IllegalArgumentException("Root or value to be inserted can not be null.");
+    }
+    BasicNode<T> nodeToInsert = new BasicNode<T>(valueToInsert);
+    BasicNode<T> nodeBeingChecked = root;
+    while (true) {
+      int comparison = nodeBeingChecked.getValue().compareTo(valueToInsert);
+      if (comparison == 0) {
+        return;
+      } else if (comparison == 1) {
+        if (!nodeBeingChecked.hasLeft()) {
+          nodeBeingChecked.setLeft(nodeToInsert);
+          return;
+        }
+        nodeBeingChecked = nodeBeingChecked.getLeft();
+      } else {
+        if (!nodeBeingChecked.hasRight()) {
+          nodeBeingChecked.setRight(nodeToInsert);
+          return;
+        }
+        nodeBeingChecked = nodeBeingChecked.getRight();
+      }
+    }
+  }
+
+  /***
+   * Searches a tree for a node containing the provided value.
+   *
+   * @param root the tree's root node
+   * @param valueToSearch the node with this value to be searched
+   * @return the node object or null
+   */
+  public static <T extends Comparable<T>> BasicNode<T> searchNodeWithValue(
+      BasicNode<T> root, T valueToSearch) {
+    if (null == root || null == valueToSearch) {
+      throw new IllegalArgumentException("Root or value to be inserted can not be null.");
+    }
+    Queue<BasicNode<T>> nodes = new LinkedList<BasicNode<T>>();
+    nodes.add(root);
+    //TODO(anupam): Implement using InOrder traversal as the nodes in next level are added to the
+    // queue even if the current level has the node to be searched.
+    while (!nodes.isEmpty()) {
+      BasicNode<T> node = nodes.poll();
+      if (node.getValue().equals(valueToSearch)) {
+        return node;
+      }
+      if (node.hasLeft()) {
+        nodes.add(node.getLeft());
+      }
+      if (node.hasRight()) {
+        nodes.add(node.getRight());
+      }
+    }
+    return null;
   }
 
   private static <T extends Comparable<T>> void generateBinaryTree(BasicNode<T> root, T value) {
