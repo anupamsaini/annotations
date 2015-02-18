@@ -1,5 +1,6 @@
 package tree;
 
+import static tree.TreeUtil.getNodeHeight;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -25,12 +26,18 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     System.out.println("Inorder         " + inOrder(node));
     System.out.println("PreDepth        " + inPreDepth(node));
     System.out.println("PostDepth       " + inPostDepth(node));
-    System.out.println("LeafNodes       " + getAllLeafNodes(node));
+    System.out.println("LeafNodes       " + getLeafNodes(node));
     System.out.println("height ok       " + isHeigthBalanced(node));
     System.out.println("Generated       "
         + Helper.prettyPrintCollection(breadth(generateBinaryTree(Arrays.asList(arr)))));
   }
 
+  /**
+   * Generates a tree that follows binary search tree property.
+   *
+   * @param list the values to be inserted as {@link BasicNode} into the tree.
+   * @return the generated trees root node.
+   */
   public static <T extends Comparable<T>> BasicNode<T> generateBST(List<T> list) {
     if (null == list || list.size() < 1) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -42,6 +49,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return node;
   }
 
+  /**
+   * Performs depth first in order traversal of the tree.
+   *
+   * @param root the root node of the tree
+   * @return the list representing the inorder traversal of tree nodes
+   */
   public static <T extends Comparable<T>> List<BasicNode<T>> inOrder(BasicNode<T> root) {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -51,6 +64,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return inOrderView;
   }
 
+  /**
+   * Performs depth first pre order traversal of the tree.
+   *
+   * @param root the root node of the tree
+   * @return the list representing the pre order traversal of tree nodes
+   */
   public static <T extends Comparable<T>> List<BasicNode<T>> inPreDepth(BasicNode<T> root) {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -60,6 +79,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return inOrderView;
   }
 
+  /**
+   * Performs depth first post order traversal of the tree.
+   *
+   * @param root the root node of the tree
+   * @return the list representing the post order traversal of tree nodes
+   */
   public static <T extends Comparable<T>> List<BasicNode<T>> inPostDepth(BasicNode<T> root) {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -69,6 +94,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return inOrderView;
   }
 
+  /**
+   * Performs breadth first traversal of the tree.
+   *
+   * @param root the root node of the tree
+   * @return the list representing the breadth first traversal of tree nodes
+   */
   public static <T extends Comparable<T>> List<BasicNode<T>> breadth(BasicNode<T> root) {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -89,7 +120,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return inOrderView;
   }
 
-  public static <T extends Comparable<T>> List<BasicNode<T>> getAllLeafNodes(BasicNode<T> root) {
+  /**
+   * Fetches the leaf {@link BasicNode} of the tree.
+   *
+   * @param root the root node
+   * @return a list of leaf nodes.
+   */
+  public static <T extends Comparable<T>> List<BasicNode<T>> getLeafNodes(BasicNode<T> root) {
     if (null == root) {
       throw new IllegalArgumentException("Input is empty or null");
     }
@@ -111,11 +148,24 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     return leafNodes;
   }
 
+  /**
+   * Checks if the provided tree is height balanced.
+   *
+   * @param root the root node of the tree
+   * @return true if the tree is height balanced, false otherwise
+   */
   public static <T extends Comparable<T>> boolean isHeigthBalanced(BasicNode<T> root) {
-    return Math.abs(getHeight(root.getLeft()) - getHeight(root.getRight())) > 1 
+    return Math.abs(getNodeHeight(root.getLeft()) - getNodeHeight(root.getRight())) > 1
         ? false /* not balanced */: true /* balanced */;
   }
 
+  /**
+   * Generates a binary tree.
+   * <P> Note that the generated tree is not guaranteed to be binary search tree.
+   *
+   * @param list the values to be inserted into tree.
+   * @return the root node of the generated tree.
+   */
   public static <T extends Comparable<T>> BasicNode<T> generateBinaryTree(List<T> list) {
     if (null == list || list.size() < 1) {
       throw new IllegalArgumentException("Input is empty or null");
@@ -203,12 +253,5 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
     traversePostDepth(node.getLeft(), postOrderView);
     traversePostDepth(node.getRight(), postOrderView);
     postOrderView.add(node);
-  }
-
-  private static <T extends Comparable<T>> int getHeight(BasicNode<T> node) {
-    if (node == null) {
-      return 0;
-    }
-    return Math.max(getHeight(node.getLeft()), getHeight(node.getRight())) + 1;
   }
 }
