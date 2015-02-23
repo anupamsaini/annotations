@@ -100,6 +100,52 @@ public class TreeUtil {
   }
 
   /**
+   * Returns the smallest node in the right sub tree or the root element.
+   *
+   * @param root the tree's root node
+   * @return the smallest node in right sub tree or root
+   */
+  public static <T extends Comparable<T>> BasicNode<T> getSmallestNodeInRightSubTreeOrRoot(
+      BasicNode<T> root) {
+    if (root == null) {
+      throw new IllegalArgumentException("Root node can not be null.");
+    } else if (!root.hasRight()) {
+      return root;
+    }
+    BasicNode<T> node = root.getRight();
+    while(true) {
+      if (node.hasLeft()) {
+        node = node.getLeft();
+      } else {
+        return node;
+      }
+    }
+  }
+
+  /**
+   * Returns the largest node in the left sub tree or the root element.
+   *
+   * @param root the tree's root node
+   * @return the largest node in left sub tree or root
+   */
+  public static <T extends Comparable<T>> BasicNode<T> getLargestNodeInLeftSubTreeOrRoot(
+      BasicNode<T> root) {
+    if (root == null) {
+      throw new IllegalArgumentException("Root node can not be null.");
+    } else if (!root.hasLeft()) {
+      return root;
+    }
+    BasicNode<T> node = root.getLeft();
+    while(true) {
+      if (node.hasRight()) {
+        node = node.getRight();
+      } else {
+        return node;
+      }
+    }
+  }
+
+  /**
    * Pretty prints a tree to {@link System#out}.
    * <p> For instance the following values in a tree would be printed as:
    *    [50,25,75,10,30,60,90,4,12,27,40,55,65,80,99]
@@ -163,9 +209,9 @@ public class TreeUtil {
   }
 
   public static void main(String args[]) {
-    Integer arr[] = {50,25,75,10,30,60,90,4,12,27,40,55,65,80,99};
-    arr = new Integer[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
-    arr = new Integer[] {20, 31, 17, 23, 34, 30, 36, 46, 28};
+    Integer arr[] = {50,25,75,10,30,60,90,4,12,27,40,55,65,80,78,85,99};
+    //arr = new Integer[] {9, 8, 7, 6, 5, 4, 3, 2, 1};
+    //arr = new Integer[] {20, 31, 17, 23, 34, 30, 36, 46, 28};
     BasicNode<Integer> node = BinarySearchTree.generateBST(Arrays.asList(arr));
     printTree(node);
   }
