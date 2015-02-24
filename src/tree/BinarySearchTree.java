@@ -218,23 +218,60 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
    * @return the node object or null
    */
   public static <T extends Comparable<T>> BasicNode<T> searchNodeWithValue(
-      BasicNode<T> root, T valueToSearch) {
+      BasicNode<T> root,
+      T valueToSearch) {
     if (null == root || null == valueToSearch) {
       throw new IllegalArgumentException("Root or value to be inserted can not be null.");
     }
+    if (root.getValue().equals(valueToSearch)) {
+      return root;
+    }
+
+    BasicNode<T> parentNode = getParentNodeOrNull(root, valueToSearch);
+    if (null != parentNode) {
+      if (parentNode.hasLeft() && parentNode.getLeft().getValue().equals(valueToSearch)) {
+        return parentNode.getLeft();
+      } else if (parentNode.hasRight() && parentNode.getRight().getValue().equals(valueToSearch)) {
+        return parentNode.getRight();
+      }
+    }
+    return null;
+  }
+
+  /***
+   * Returns the parent node of the key being searched or null.
+   *
+   * @param root the tree's root node
+   * @param valueToSearch the node with this value to be searched
+   * @return the node object or null
+   */
+  public static <T extends Comparable<T>> BasicNode<T> getParentNodeOrNull(
+      BasicNode<T> root,
+      T valueToSearch) {
+    if (null == root || null == valueToSearch) {
+      throw new IllegalArgumentException("Root or value to be inserted can not be null.");
+    }
+
+    if (root.getValue().equals(valueToSearch)) {
+      return null;
+    }
+
     Queue<BasicNode<T>> nodes = new LinkedList<BasicNode<T>>();
     nodes.add(root);
     //TODO(anupam): Implement using InOrder traversal as the nodes in next level are added to the
     // queue even if the current level has the node to be searched.
     while (!nodes.isEmpty()) {
       BasicNode<T> node = nodes.poll();
-      if (node.getValue().equals(valueToSearch)) {
-        return node;
-      }
       if (node.hasLeft()) {
+        if (node.getLeft().getValue().equals(valueToSearch)) {
+          return node;
+        }
         nodes.add(node.getLeft());
       }
       if (node.hasRight()) {
+        if (node.getRight().getValue().equals(valueToSearch)) {
+          return node;
+        }
         nodes.add(node.getRight());
       }
     }

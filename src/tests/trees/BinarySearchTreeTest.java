@@ -4,6 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
 
+import tree.TreeUtil;
+
 import tree.BasicNode;
 import tree.BinarySearchTree;
 
@@ -83,6 +85,38 @@ public class BinarySearchTreeTest {
     BasicNode<Integer> root = BinarySearchTree.generateBST(Arrays.asList(arr));
     BinarySearchTree.insertToBST(root, 6);
     assertThat((BinarySearchTree.searchNodeWithValue(root, -1))).isNull();
+  }
+
+  @Test
+  public void searchNodeInTree_rootNodeContainsValueToSearch_returnsNode() {
+    Integer arr[] = {50, 25, 75, 10, 30, 60, 90, 4, 12, 27, 40, 55, 65, 80, 99};
+    BasicNode<Integer> root = BinarySearchTree.generateBST(Arrays.asList(arr));
+    assertThat((BinarySearchTree.searchNodeWithValue(root, 50)))
+        .isEqualTo(new BasicNode<Integer>(50));
+  }
+
+  @Test
+  public void getParentNode_rootNodeIsEqualToValueToSearch_returnsNull() {
+    Integer arr[] = {7};
+    BasicNode<Integer> root = BinarySearchTree.generateBST(Arrays.asList(arr));
+    assertThat((BinarySearchTree.getParentNodeOrNull(root, 7))).isNull();
+  }
+
+  @Test
+  public void getParentNode_valueNotFound_returnsNull() {
+    Integer arr[] = {50, 25, 75, 10, 30, 60, 90, 4, 12, 27, 40, 55, 65, 80, 99};
+    BasicNode<Integer> root = BinarySearchTree.generateBST(Arrays.asList(arr));
+    assertThat((BinarySearchTree.getParentNodeOrNull(root, -1))).isNull();
+  }
+
+  @Test
+  public void getParentNode_valueFound_returnsParentNode() {
+    Integer arr[] = {50, 25, 75, 10, 30, 60, 90, 4, 12, 27, 40, 55, 65, 80, 99};
+    BasicNode<Integer> root = BinarySearchTree.generateBST(Arrays.asList(arr));
+    assertThat((BinarySearchTree.getParentNodeOrNull(root, 99)))
+        .isEqualTo(new BasicNode<Integer>(90));
+    assertThat((BinarySearchTree.getParentNodeOrNull(root, 10)))
+        .isEqualTo(new BasicNode<Integer>(25));
   }
 
   @SafeVarargs
